@@ -14,3 +14,9 @@ request('http://api.wordnik.com:80/v4/word.json/good/relatedWords?useCanonical=f
       console.log(info);
     }
 })
+process.stdin.setEncoding('ascii');
+process.stdin.on('data', (input)=>{
+	input = input.trim();
+   input = input.split(' ');
+   console.log(input);
+});
