@@ -4,6 +4,7 @@ var request = require('request');
 var waterfall = require('async-waterfall');
 module.exports = {
 getDefinations : function (word,callback) {
+	console.log("here are all the definations");
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
     if(error) return console.log('Error while fetching Definition from wordnik API',error);
     var info = JSON.parse(body);
@@ -20,6 +21,7 @@ getDefinations : function (word,callback) {
 },
 
 getExamples : function (word,callback) {
+	console.log("here are all the examples");
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/examples?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
      if(error) return console.log('Error while fetching Example from wordnik API',error);
     var info = JSON.parse(body);
@@ -36,6 +38,8 @@ getExamples : function (word,callback) {
 },
 
 getSynonyms : function (word,callback) {
+
+	console.log("all the synonyms");
 	var x = false;
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
 		if(error) return console.log('Error while fetching Example from wordnik API',error);
@@ -57,6 +61,7 @@ getSynonyms : function (word,callback) {
 },
 
 getAntonyms : function (word,callback) {
+	console.log("all the antonyms");
 	var x = false;
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
     if(error) return console.log('Error while fetching Example from wordnik API',error);
@@ -78,6 +83,7 @@ getAntonyms : function (word,callback) {
 },
 
 getFullDictionary : function(word){
+	console.log("here is full dictionary");
        waterfall([
          function(callback){
            module.exports.getDefinations(word,callback);
@@ -95,6 +101,7 @@ getWod : function () {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(body);
       var word = info.word;
+      console.log("word of the day is "+info.word);
       module.exports.getFullDictionary(word);
     }
 })
