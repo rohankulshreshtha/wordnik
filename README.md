@@ -37,6 +37,6 @@ Installation
 
 API Reference
 wordnik apis.
-async-waterfall - version(0.1.5)
+async-waterfall - version(0.1.5) - used for calling functions synchronously
 
 Author name - Rohan Kulshreshtha.(email - rohankulshreshtha.bkn@gmail.com)
