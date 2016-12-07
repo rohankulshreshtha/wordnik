@@ -44,7 +44,7 @@ getCorrect : function (gameObject,check,callback) {
                 n--;
             }
             console.log(w.join(''));
-            console.log("please enter the right answer");
+            console.log('Please, enter correct choice (1,2,3).');
  },
  getDefination : function (word,callback) {
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
