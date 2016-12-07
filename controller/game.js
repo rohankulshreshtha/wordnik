@@ -13,7 +13,7 @@ getCorrect : function (gameObject,check,callback) {
     else{
     	for(var syn in info){
     		if(info[syn].relationshipType=='synonym'){
-    			if(info[syn].words.indexOf(check) != -1){
+    			if((info[syn].words.indexOf(check) != -1) || gameObject.word == check){
     				console.log("right answer");
     				console.log("try other synonyms");
     			}
@@ -54,7 +54,7 @@ getCorrect : function (gameObject,check,callback) {
               console.log(`No Definition found`);
           }
     else{
-    		console.log(info[0].text+"\n");
+    		console.log("defination :- "+info[0].text+"\n");
     }  
     if(callback) callback(null,word);
 	});
@@ -70,7 +70,7 @@ getSynonym : function (word,callback) {
     else{
     	for(var syn in info){
     		if(info[syn].relationshipType=='synonym'){
-    			console.log(info[syn].words[0]);
+    			console.log("synonym :-"+info[syn].words[0]);
     			x = true;
     		}
     	}
@@ -90,7 +90,7 @@ getAntonym : function (word,callback) {
     else{
     	for(var ant in info){
     		if(info[ant].relationshipType=='antonym'){
-    			console.log(info[ant].words[0]);
+    			console.log("antonym :-"+info[ant].words[0]);
     			x = true;
     		}
     	}
