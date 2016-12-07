@@ -5,20 +5,20 @@ var waterfall = require('async-waterfall');
 module.exports = {
 getCorrect : function (gameObject,check,callback) {
 	request('http://api.wordnik.com:80/v4/word.json/' + gameObject.word + '/relatedWords?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
-    if(error) return console.log('Error while fetching Definition from wordnik API',error);
+    if(error) return console.log('Error while fetching Definition from wordnik API',error);		//error
     var info = JSON.parse(body);
     if(info.length == 0) {
-              console.log(`No Definition found`);
+              console.log(`No Definition found`);		//if empty
           }
     else{
     	for(var syn in info){
     		if(info[syn].relationshipType=='synonym'){
-    			if((info[syn].words.indexOf(check) != -1) || gameObject.word == check){
+    			if((info[syn].words.indexOf(check) != -1) || gameObject.word == check){		//right answer
     				console.log("right answer");
     				console.log("try other synonyms");
     			}
     			else{ 
-    				console.log("try again");
+    				console.log("try again");				//wrong answer
     				console.log("enter 1 or 2 or 3");
     				gameObject.choice=true;
     			}
@@ -29,7 +29,7 @@ getCorrect : function (gameObject,check,callback) {
 	})
 },
  getJumbled : function (w){
- 	 w=w.split('');
+ 	 w=w.split('');		//splitting
             var n=w.length,
                 jumble =0,
                 temp = 0;
@@ -43,15 +43,15 @@ getCorrect : function (gameObject,check,callback) {
                 w[n-1] = temp;
                 n--;
             }
-            console.log(w.join(''));
+            console.log(w.join(''));		//joining
             console.log('Please, enter correct choice (1,2,3).');
  },
  getDefination : function (word,callback) {
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
-    if(error) return console.log('Error while fetching Definition from wordnik API',error);
+    if(error) return console.log('Error while fetching Definition from wordnik API',error);		//error
     var info = JSON.parse(body);
     if(info.length == 0) {
-              console.log(`No Definition found`);
+              console.log(`No Definition found`);		//if empty
           }
     else{
     		console.log("defination :- "+info[0].text+"\n");
@@ -62,10 +62,10 @@ getCorrect : function (gameObject,check,callback) {
 getSynonym : function (word,callback) {
 	var x = false;
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
-		if(error) return console.log('Error while fetching Example from wordnik API',error);
+		if(error) return console.log('Error while fetching Example from wordnik API',error);		//error
     var info = JSON.parse(body);
     if(info.length == 0) {
-              console.log(`No words found`);
+              console.log(`No words found`);		//if empty
           }
     else{
     	for(var syn in info){
@@ -82,10 +82,10 @@ getSynonym : function (word,callback) {
 getAntonym : function (word,callback) {
 	var x = false;
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
-    if(error) return console.log('Error while fetching Example from wordnik API',error);
+    if(error) return console.log('Error while fetching Example from wordnik API',error);		//error
     var info = JSON.parse(body);
     if(info.length == 0) {
-              console.log(`No words found`);
+              console.log(`No words found`);		//if empty
           }
     else{
     	for(var ant in info){
@@ -100,6 +100,8 @@ getAntonym : function (word,callback) {
 	})
 },
  getInfo : function(gameObject){
+ 		//calling the methods synchronously by the use of waterfall
+		//reusing the methods
  	waterfall([
          function(callback){
            module.exports.getDefination(gameObject.word,callback);
@@ -107,7 +109,7 @@ getAntonym : function (word,callback) {
          module.exports.getSynonym,
          module.exports.getAntonym
        ], function(err,result){
-          if(err) return console.log('Error while fetching full dictionary from wordnik API',err);
+          if(err) return console.log('Error while fetching full dictionary from wordnik API',err);		//error
        });
  }
 }
