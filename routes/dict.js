@@ -1,10 +1,44 @@
 var path = require("path");
 var api_key = require('../config/key');
 var wordnik = require('../controller/wordnik');
-var request = require('request');
+var gameInstance = require('../controller/game');
+//var request = require('request');
+
+var gameObject = {
+    on:false,
+    word:'rainbow',
+    choice:false
+    };
 
 exports.getroute = function (input) {
-	if(input[0]!='./dict'){
+	if(gameObject.on==true && gameObject.choice==false){
+			gameInstance.getCorrect(gameObject,input[0]);
+		}
+	else if(gameObject.on==true && gameObject.choice==true){
+		switch(input[0]){
+                case '1':
+                    console.log("enter again");
+                    gameObject.choice=false;
+                    break;
+                case '2':
+                    console.log('Following is a hint, a jumbled word.');
+                    gameInstance.getJumbled(gameObject.word);
+                    break;
+                case '3':
+                    console.log('Game Over! Following is full dictionary of the answer.');
+
+                    //showing complete dictionary of the word
+                    wordnik.getFullDictionary(gameObject.word);
+
+                    //reseting
+                    gameObject.on = false;
+                    gameObject.choice = false;
+                    break;
+                default:
+                    console.log('Please, enter correct choice (1,2,3).');
+            }
+	}
+	else if(input[0]!='./dict'){
 		console.log("invalid command");
 	}
 	else if(input.length==1){
@@ -25,7 +59,8 @@ exports.getroute = function (input) {
 	else if((input.length==3 && input[1]=='dict') || (input.length==2 && input[1]!='play')){
 		wordnik.getFullDictionary(input[2]);
 	}
-	else{
-		console.log("play");
+	else if(input.length==2 && input[1]=='play'){
+		gameInstance.getInfo(gameObject);
+		gameObject.on=true;
 	}
 }
