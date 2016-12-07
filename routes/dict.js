@@ -2,9 +2,8 @@ var path = require("path");
 var api_key = require('../config/key');
 var wordnik = require('../controller/wordnik');
 var gameInstance = require('../controller/game');
-//var request = require('request');
 
-var gameObject = {
+var gameObject = {			//object declaration
     on:false,
     word:'elevating',
     choice:false
@@ -12,7 +11,7 @@ var gameObject = {
 
 exports.getroute = function (input) {
 	if(gameObject.on==true && gameObject.choice==false){
-			gameInstance.getCorrect(gameObject,input[0]);
+			gameInstance.getCorrect(gameObject,input[0]);		//matching the word
 		}
 	else if(gameObject.on==true && gameObject.choice==true){
 		switch(input[0]){
@@ -22,7 +21,7 @@ exports.getroute = function (input) {
                     break;
                 case '2':
                     console.log('Following is a hint, a jumbled word.');
-                    gameInstance.getJumbled(gameObject.word);
+                    gameInstance.getJumbled(gameObject.word);		//getting hint
                     break;
                 case '3':
                     console.log('Game Over! Following is full dictionary of the answer.');
@@ -60,7 +59,7 @@ exports.getroute = function (input) {
 		if(input.length==3 && input[1]=='dict'){
 		wordnik.getFullDictionary(input[2]);}
 		else
-			wordnik.getFullDictionary(input[1]);
+			wordnik.getFullDictionary(input[1]);		
 	}
 	else if(input.length==2 && input[1]=='play'){
 		gameInstance.getInfo(gameObject);
