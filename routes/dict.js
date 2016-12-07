@@ -6,7 +6,7 @@ var gameInstance = require('../controller/game');
 
 var gameObject = {
     on:false,
-    word:'rainbow',
+    word:'elevating',
     choice:false
     };
 
@@ -57,7 +57,10 @@ exports.getroute = function (input) {
 		wordnik.getExamples(input[2]);
 	}
 	else if((input.length==3 && input[1]=='dict') || (input.length==2 && input[1]!='play')){
-		wordnik.getFullDictionary(input[2]);
+		if(input.length==3 && input[1]=='dict'){
+		wordnik.getFullDictionary(input[2]);}
+		else
+			wordnik.getFullDictionary(input[1]);
 	}
 	else if(input.length==2 && input[1]=='play'){
 		gameInstance.getInfo(gameObject);
