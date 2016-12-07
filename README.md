@@ -30,6 +30,7 @@ Introduction
   
 
 Installation
+
 1. clone or download the project.
 2. go to project path and execute (npm install).
 3. run the command (node index.js).
@@ -37,6 +38,7 @@ Installation
 5. enjoy (right word is "elevating")
 
 API Reference
+
 wordnik apis.
 async-waterfall - version(0.1.5) - used for calling functions synchronously
 
