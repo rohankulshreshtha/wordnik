@@ -1,76 +1,102 @@
 var path = require("path");
 var api_key = require('../config/key');
 var request = require('request');
-
-exports.getdef = function (word) {
-	var array=[];
+var waterfall = require('async-waterfall');
+module.exports = {
+getDefinations : function (word,callback) {
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/definitions?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var info = JSON.parse(body);
-    for(var def in info){
-		array.push(info[def].text);
-	}
-    }
-    else
-    	console.log("error getting the defination of the word");
-	})
-	return array;
-};
+    if(error) return console.log('Error while fetching Definition from wordnik API',error);
+    var info = JSON.parse(body);
+    if(info.length == 0) {
+              console.log(`No Definition found`);
+          }
+    else{
+    	for(var def in info){
+    		console.log(info[def].text+"\n");
+    	}
+    }  
+    if(callback) callback(null,word);
+	});
+},
 
-exports.getex = function (word) {
-	var array=[];
+getExamples : function (word,callback) {
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/examples?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var info = JSON.parse(body);
-    for(var ex in info){
-		array.push(info[ex].text);
-	}
-    }
-    else
-    	console.log("error getting the example of the word");
-	})
-	return array;
-};
+     if(error) return console.log('Error while fetching Example from wordnik API',error);
+    var info = JSON.parse(body);
+    if(info.length == 0) {
+              console.log(`No Examples found`);
+          }
+    else{
+    	for(var ex in info.examples){
+    		console.log(info.examples[ex].text+"\n");
+    	}
+    }  
+    if(callback) callback(null,word);
+	});
+},
 
-exports.getsyn = function (word) {
-	var array=[];
+getSynonyms : function (word,callback) {
+	var x = false;
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var info = JSON.parse(body);
-    for(var ex in info){
-		if(info[ex].relationshipType=='synonym')
-			array=info[ex].words;
-	}
-    }
-    else
-    	console.log("error getting the example of the word");
+		if(error) return console.log('Error while fetching Example from wordnik API',error);
+    var info = JSON.parse(body);
+    if(info.length == 0) {
+              console.log(`No words found`);
+          }
+    else{
+    	for(var syn in info){
+    		if(info[syn].relationshipType=='synonym'){
+    			console.log(info[syn].words);
+    			x = true;
+    		}
+    	}
+    		if(x==false) console.log("no synonyms found");
+    }  
+    if(callback) callback(null,word);
 	})
-	return array;
-};
+},
 
-exports.getant = function (word) {
-	var array=[];
+getAntonyms : function (word,callback) {
+	var x = false;
 	request('http://api.wordnik.com:80/v4/word.json/' + word + '/relatedWords?limit=200&includeRelated=true&useCanonical=false&includeTags=false&api_key='+api_key.key, function (error, response, body) {
-    if (!error && response.statusCode == 200) {
-      var info = JSON.parse(body);
-    for(var ex in info){
-		if(info[ex].relationshipType=='antonym')
-			array=info[ex].words;
-	}
-    }
-    else
-    	console.log("error getting the example of the word");
+    if(error) return console.log('Error while fetching Example from wordnik API',error);
+    var info = JSON.parse(body);
+    if(info.length == 0) {
+              console.log(`No words found`);
+          }
+    else{
+    	for(var ant in info){
+    		if(info[ant].relationshipType=='antonym'){
+    			console.log(info[ant].words);
+    			x = true;
+    		}
+    	}
+    	if(x==false) console.log("no antonyms found");
+    }  
+    if(callback) callback(null,word);
 	})
-	return array;
-};
+},
 
-exports.getwod = function (word) {
-	var word;
+getFullDictionary : function(word){
+       waterfall([
+         function(callback){
+           module.exports.getDefinations(word,callback);
+         },
+         module.exports.getAntonyms,
+         module.exports.getSynonyms,
+         module.exports.getExamples,
+       ], function(err,result){
+          if(err) return console.log('Error while fetching full dictionary from wordnik API',err);
+       });
+     },
+
+getWod : function () {
 	request('http://api.wordnik.com:80/v4/words.json/wordOfTheDay?date=2016-12-05&api_key='+api_key.key, function (error, response, body) {
     if (!error && response.statusCode == 200) {
       var info = JSON.parse(body);
-      word = info.word;
+      var word = info.word;
+      module.exports.getFullDictionary(word);
     }
 })
-	return word;
-};
+}
+}
